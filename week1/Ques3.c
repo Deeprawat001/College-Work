@@ -1,25 +1,48 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+
 int main()
 {
-    pid_t pid = fork();
+    pid_t cpid1, cpid2;
+    cpid1 = fork();
 
-    if (pid < 0)
+    if (cpid1 < 0)
     {
-        perror("fork failed");
-    }
-    else if (pid == 0)
-    {
-        printf("Child process\n");
-        execlp("ls", "ls", "-l", NULL);
+        perror("Fork failed");
         exit(1);
+    }
+    if (cpid1 == 0)
+    {
+        printf("First Child with PID: %d, Parent with PID : %d\n", getpid(), getppid());
+        sleep(2);
+        printf("First Child completed\n");
+        exit(0);
     }
     else
     {
         wait(NULL);
-        printf("Parent process: child finished.\n");
-    }
+        printf("First child finished execution.\n");
 
-    return 0;
+        cpid2 = fork();
+
+        if (cpid2 < 0)
+        {
+            perror("Fork failed");
+            exit(1);
+        }
+        if (cpid2 == 0)
+        {
+            printf("Second Child with PID: %d,  Parent with PID: %d\n", getpid(), getppid());
+            sleep(5);
+            printf("Second Child PID: %d, still running, now Parent PID: %d\n", getpid(), getppid());
+            exit(0);
+        }
+        else
+        {
+            printf("Parent exits before second child completes!\n");
+            exit(0);
+        }
+    }
 }

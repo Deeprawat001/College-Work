@@ -10,11 +10,11 @@ int main()
     }
     else if (pid == 0)
     {
-        printf("This is child process.\n");
+        printf("This is child process\n");
     }
     else
     {
-        printf("This is parent process.\n");
+        printf("This is parent process with pid: %d.\n",getpid());
     }
 
     return 0;
