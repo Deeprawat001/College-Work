@@ -48,7 +48,7 @@ int main()
                     minimum = ps[i].bt;
                     min_index = i;
                 }
-                if (ps[i].bt == minimum)
+                else if (ps[i].bt == minimum)
                 {
                     if (ps[i].at < ps[min_index].at)
                     {
