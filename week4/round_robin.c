@@ -1,3 +1,4 @@
+// round robin code
 #include <stdio.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -49,18 +50,18 @@ int main()
     float sum_tat = 0, sum_wt = 0, sum_rt = 0;
     for (int i = 0; i < n; i++)
     {
-        printf("\nEnter Process %d Arrival Time: ", i);
+        printf("Enter Process %d Arrival Time: ", i);
         scanf("%d", &ps[i].at);
         ps[i].pid = i;
     }
 
     for (int i = 0; i < n; i++)
     {
-        printf("\nEnter Process %d Burst Time: ", i);
+        printf("Enter Process %d Burst Time: ", i);
         scanf("%d", &ps[i].bt);
         ps[i].bt_remaining = ps[i].bt;
     }
-    printf("\nEnter time quanta: ");
+    printf("Enter time quanta: ");
     scanf("%d", &tq);
     qsort((void *)ps, n, sizeof(struct process_struct), comparatorAT);
     // q.push(0);
@@ -70,6 +71,7 @@ int main()
     while (completed != n)
     {
         index = queue[front];
+
         front++;
         if (ps[index].bt_remaining == ps[index].bt)
         {
@@ -99,7 +101,7 @@ int main()
             sum_wt += ps[index].wt;
             sum_rt += ps[index].rt;
         }
-        for (int i = 0; i < n; i++)
+        for (int i = 1; i < n; i++)
         {
             if (ps[i].bt_remaining > 0 && ps[i].at <= current_time &&
                 visited[i] == false)
