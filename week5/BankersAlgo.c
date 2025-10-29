@@ -1,9 +1,10 @@
+//banker's problem
 #include <stdio.h>
 struct Process
 {
     int A, B, C;
 };
-// require means max_need
+
 int main()
 {
     int n, A, B, C;
@@ -84,4 +85,3 @@ int main()
     printf("P%d", ans[n - 1]);
     return 0;
 }
-
