@@ -1,28 +1,35 @@
 #include <stdio.h>
 #include <stdbool.h>
-typedef struct file
-{
+
+typedef struct file {
     char name;
     int start_block;
     int blocks[100];
     int no_of_blocks;
 } file;
-int main()
-{
-    bool blocks[1000] = {true};
+
+int main() {
+    bool blocks[1000];
+    for (int i = 0; i < 1000; i++) blocks[i] = true;
+
     int n;
     printf("Enter number of files: ");
     scanf("%d", &n);
+
     file files[n];
+
     for (int i = 0; i < n; i++)
     {
         getchar();
         printf("Enter file %d name: ", i + 1);
         scanf("%c", &files[i].name);
+
         printf("Enter starting block of file %d: ", i + 1);
         scanf("%d", &files[i].start_block);
+
         printf("Enter no of blocks in file %d: ", i + 1);
         scanf("%d", &files[i].no_of_blocks);
+
         printf("Enter blocks for file %d: ", i + 1);
         for (int j = 0; j < files[i].no_of_blocks; j++)
         {
@@ -30,7 +37,12 @@ int main()
             while (1)
             {
                 scanf("%d", &b);
-                if (blocks[b] == false)
+
+                if (b < 0 || b >= 1000)
+                {
+                    printf("Invalid block, enter another block: ");
+                }
+                else if (blocks[b] == false)
                 {
                     printf("Block is already occupied, enter another block: ");
                 }
@@ -43,11 +55,14 @@ int main()
             }
         }
     }
+
     char ch;
     getchar();
     printf("Enter the file name to be searched: ");
     scanf("%c", &ch);
+
     bool found = false;
+
     for (int i = 0; i < n; i++)
     {
         if (files[i].name == ch)
@@ -66,7 +81,9 @@ int main()
             break;
         }
     }
+
     if (!found)
         printf("\nFile not found\n");
+
     return 0;
 }
