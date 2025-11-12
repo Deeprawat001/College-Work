@@ -1,36 +1,32 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<sys/ipc.h>
-#include<sys/msg.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
 
+int main() {
+    // Create a unique key
+    key_t key = ftok("shmfile", 65);
 
-#include<unistd.h>
+    // Create shared memory segment
+    int shmid = shmget(key, 1024, 0666 | IPC_CREAT);
 
-struct msg_buffer{
-    long msg_type;
-    char msg_text[100];
+    // Fork to create parent and child
+    if (fork() == 0) {
+        // Child process - Write into shared memory
+        char *str = (char*) shmat(shmid, NULL, 0);
+        strcpy(str, "Hello from Child");
+        printf("Child wrote data to shared memory.\n");
+        shmdt(str);
+    } else {
+        sleep(1);  // wait for child to write
+        // Parent process - Read from shared memory
+        char *str = (char*) shmat(shmid, NULL, 0);
+        printf("Parent read from shared memory: %s\n", str);
+        shmdt(str);
+        shmctl(shmid, IPC_RMID, NULL); // delete memory segment
+    }
 
-}message;
-
-int main(){
-    key_t key;
-
-    int msgid;
-    key=ftok("progfile",65);
-    msgid=msgget(key,0666 | IPC_CREAT);
-    message.msg_type=1;
-     if(fork()==0){
-        strcpy(message.msg_text,"Message from child");
-        msgsnd(msgid, &message,sizeof(message),0);
-
-     }
-     else{
-        msgrcv(msgid, &message,sizeof(message),1,0);
-        printf("Parent read : %s\n",message.msg_text);
-        msgctl(msgid, IPC_RMID,NULL);
-
-     }
-     
-     return 0;
+    return 0;
 }
